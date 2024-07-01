@@ -1,15 +1,7 @@
 package com.example.test_movie_app
-
-import io.mockk.InternalPlatformDsl.toArray
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.bouncycastle.openssl.PEMParser
-
-import org.bouncycastle.jce.provider.PEMUtil
-import org.bouncycastle.util.encoders.Base64
 import org.junit.Test
-import java.io.StringReader
-import java.security.Security
-import java.security.cert.X509Certificate
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -30,6 +22,7 @@ class ExampleUnitTest {
 
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     fun pemToHexArray(pemContent: String): List<String> {
         // Remove PEM header and footer
         val pemHeader = "-----BEGIN CERTIFICATE-----"
@@ -46,8 +39,7 @@ class ExampleUnitTest {
     }
 
 
-
-    fun certToHeaArray(){
+    private fun certToHeaArray(){
         for( data in RMGRSACertificates().certificates) {
             println()
             println()
@@ -155,7 +147,7 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun smallestSubarrayWithGivenSum() {
+    fun smallestSubArrayWithGivenSum() {
 
         val S= 7
         val  arr = intArrayOf(2, 1, 5, 2, 3, 2)// Output: 2

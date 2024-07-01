@@ -1,12 +1,10 @@
-package com.example.test_movie_app.Presentation.viewModels.components
+package com.example.test_movie_app.presentation.viewModels.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
@@ -19,11 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
-import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.compose.rememberAsyncImagePainter
@@ -66,7 +62,7 @@ fun ShowItem(showsResponseItem:ShowsResponseItem) {
                 )
             }
             Text(
-                text = showsResponseItem?.name ?:"empty",
+                text = showsResponseItem.name ?:"empty",
                 Modifier.padding(8.dp),
                 style = MaterialTheme.typography.bodyLarge
             )

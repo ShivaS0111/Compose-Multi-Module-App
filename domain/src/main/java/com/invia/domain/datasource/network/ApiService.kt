@@ -1,8 +1,8 @@
 package com.invia.domain.datasource.network
 
-import com.invia.domain.datasource.ShowsResponse
+import com.invia.domain.model.ShowsResponseItem
 import retrofit2.Response
 
 interface ApiService {
-    suspend fun getTvShows():Response<ShowsResponse>
+    suspend fun getTvShows():Response<List<ShowsResponseItem>>
 }

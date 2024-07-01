@@ -1,60 +1,68 @@
+package com.example.test_movie_app
+
+import androidx.compose.ui.util.trace
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.test_movie_app.CoroutineDispatcherRule
 import com.example.test_movie_app.presentation.viewModels.MoviesViewModel
 import com.example.test_movie_app.presentation.viewModels.stateHolders.MovieStateHolder
+import com.invia.data.repository.MockTvShowsRepository
+import com.invia.data.repository.TvShowsRepositoryImpl
 import com.invia.data.useCases.GetMoviesUseCaseImpl
-
 import com.invia.domain.common.Result
 import com.invia.domain.model.ShowsResponseItem
-import com.invia.domain.repository.TvShowsRepository
 import com.invia.domain.useCases.GetMoviesUseCase
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
-import org.junit.runner.RunWith
-import javax.inject.Inject
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 
-@ExperimentalCoroutinesApi
-class MoviesViewModelTest {
+class MvUnitTest {
+
+    @get:Rule(order = 1)
+    var instantTaskExecutorRule = CoroutineDispatcherRule()
 
     private lateinit var viewModel: MoviesViewModel
-    private lateinit var repository: TvShowsRepository
 
-    private val data: List<ShowsResponseItem> by lazy {
+    private  val data: List<ShowsResponseItem> by lazy {
         arrayListOf(
             ShowsResponseItem(id = 1, name = "Movie 1", image = null, language = null),
             ShowsResponseItem(id = 2, name = "Movie 2", image = null, language = null),
             ShowsResponseItem(id = 3, name = "Movie 3", image = null, language = null)
         )
     }
-
     @Before
-    fun setUp() {
-        val useCase = GetMoviesUseCaseImpl(repository)
-        viewModel = MoviesViewModel(useCase)
+    fun setup() {
+        //MockitoAnnotations.openMocks(this)
+        viewModel = MoviesViewModel(mockk())
     }
 
     @Test
-    fun `getAllTvShows emits loading and success states`() {
+    fun testAssert() {
+
+        assert(true)
+    }
+
+
+    @Test
+    fun `getAllTvShows emits loading and success states`() = runTest{
         // Mock repository response
-        coEvery { viewModel.useCase.invoke() } returns  flow {
+        coEvery { viewModel.useCaseInvoke()} returns  flow {
             emit(Result.Success(data))
         }
 
         // Trigger the ViewModel method
         viewModel.getAllTvShows()
-        coVerify {
-            viewModel.useCase.invoke()
+
+        coVerify (atLeast = 1){
+            viewModel.useCaseInvoke()
         }
 
         // Verify that the response LiveData is in the loading state
