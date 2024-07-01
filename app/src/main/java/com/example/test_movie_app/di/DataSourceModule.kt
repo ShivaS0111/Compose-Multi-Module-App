@@ -1,9 +1,13 @@
 package com.example.test_movie_app.di
 
-import com.invia.data.datasource.network.ApiServiceImpl
-import com.invia.data.datasource.network.datasource.MoviesDataSourceImpl
+import com.invia.data.datasource.MoviesDataSourceImpl
+import com.invia.data.datasource.database.MoviesDataSourceLocalImpl
+import com.invia.data.datasource.network.datasource.MoviesDataSourceNetworkImpl
+import com.invia.domain.datasource.database.dao.MovieDAO
+import com.invia.domain.datasource.database.datasource.MoviesDataSourceLocal
 import com.invia.domain.datasource.network.ApiService
-import com.invia.domain.datasource.network.datasource.MoviesDataSource
+import com.invia.domain.datasource.MoviesDataSource
+import com.invia.domain.datasource.network.datasource.MoviesDataSourceNetwork
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +18,18 @@ import dagger.hilt.components.SingletonComponent
 object DataSourceModule {
 
     @Provides
-    fun provideMoviesDataSource(apiService: ApiService): MoviesDataSource =
-        MoviesDataSourceImpl(apiService)
+    fun provideMoviesDataSource(
+        network: MoviesDataSourceNetwork,
+        local: MoviesDataSourceLocal
+    ): MoviesDataSource =
+        MoviesDataSourceImpl(network, local)
+
+    @Provides
+    fun provideMoviesDataSourceNetwork(apiService: ApiService): MoviesDataSourceNetwork =
+        MoviesDataSourceNetworkImpl(apiService)
+
+    @Provides
+    fun provideMoviesDataSourceLocal(dao: MovieDAO): MoviesDataSourceLocal =
+        MoviesDataSourceLocalImpl(dao)
 
 }

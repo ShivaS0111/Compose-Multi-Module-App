@@ -1,10 +1,11 @@
 package com.invia.domain.useCases
 
 import com.invia.domain.common.Result
-import com.invia.domain.datasource.ShowsResponse
-import com.invia.domain.model.ShowsResponseItem
+import com.invia.domain.datasource.database.entities.Movie
 import kotlinx.coroutines.flow.Flow
 
 interface GetMoviesUseCase {
-    operator fun invoke(): Flow<Result<ShowsResponse>>
+
+    val data: Flow<List<Movie>>
+    suspend fun invoke(): Flow<Result<List<Movie>>>
 }

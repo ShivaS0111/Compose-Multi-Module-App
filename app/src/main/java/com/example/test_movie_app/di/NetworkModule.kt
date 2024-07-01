@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    val logging = HttpLoggingInterceptor().apply {
+    private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
@@ -28,19 +28,15 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit():Retrofit{
-/*        return Retrofit.Builder().baseUrl("https://api.themoviedb.org/").client(client).addConverterFactory(
-            GsonConverterFactory.create()).build()*/
-        return Retrofit.Builder()
-            .client(client)
-            .baseUrl("https://api.tvmaze.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    fun provideRetrofit(): Retrofit = Retrofit.Builder()
+        .client(client)
+        .baseUrl("https://api.tvmaze.com/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
-    }
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit) : ApiService {
-        return retrofit.create(ApiServiceImpl::class.java)
-    }
+    fun provideApiService(retrofit: Retrofit): ApiService =
+        retrofit.create(ApiServiceImpl::class.java)
+
 }
