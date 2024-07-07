@@ -18,8 +18,13 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Date
 
-@Database(entities = [Label::class, Note::class, LabelledNotes::class], version = 1, exportSchema = false)
+@Database(
+    entities = [Label::class, Note::class, LabelledNotes::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class TestDatabase : RoomDatabase() {
     abstract fun labelDao(): LabelDAO
     abstract fun notesDao(): NotesDAO
@@ -62,7 +67,7 @@ class AppDatabaseTest {
 
     @Test
     fun testInsertAndGetNote() = runBlocking {
-        val note = Note(title = "Test1", note = "Test Note", dateTime = System.currentTimeMillis())
+        val note = Note(title = "Test1", note = "Test Note", dateTime = Date())
         notesDao.insert(note)
 
         val notes = notesDao.getAllNotes().first()
@@ -85,11 +90,11 @@ class AppDatabaseTest {
     @Test
     fun testSearchNoteByTerm() = runBlocking {
         val note1 =
-            Note(title = "Work", note = "Work meeting", dateTime = System.currentTimeMillis())
+            Note(title = "Work", note = "Work meeting", dateTime = Date())
         val note2 = Note(
             title = "Grocery",
             note = "Grocery shopping",
-            dateTime = System.currentTimeMillis()
+            dateTime = Date(),
         )
         notesDao.insert(listOf(note1, note2))
 
@@ -102,7 +107,7 @@ class AppDatabaseTest {
 
     @Test
     fun testInsertLabelledNotes() = runBlocking {
-        val note = Note(title = "Work", note = "Sample Note", dateTime = System.currentTimeMillis())
+        val note = Note(title = "Work", note = "Sample Note", dateTime = Date())
         val label = Label(label = "Sample Label", color = "Green", textColor = "Black")
         notesDao.insert(note)
         labelDao.insert(label)
