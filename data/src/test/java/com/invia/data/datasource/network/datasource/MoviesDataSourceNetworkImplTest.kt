@@ -6,6 +6,7 @@ import com.invia.domain.datasource.network.ApiService
 import com.invia.domain.common.Result
 import com.invia.domain.datasource.MoviesDataSource
 import com.invia.domain.datasource.database.entities.Movie
+import com.invia.domain.datasource.network.datasource.MoviesDataSourceNetwork
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase
@@ -26,7 +27,7 @@ class MoviesDataSourceNetworkImplTest : RemoteBaseTest() {
 
     private lateinit var apiService: ApiService
     private lateinit var fakeData: FakeData
-    private lateinit var moviesDataSource: MoviesDataSource
+    private lateinit var moviesDataSource: MoviesDataSourceNetwork
 
     @Before
     fun setUp() {
