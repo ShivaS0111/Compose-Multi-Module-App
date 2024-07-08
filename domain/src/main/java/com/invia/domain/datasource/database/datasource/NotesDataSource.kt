@@ -2,6 +2,7 @@ package com.invia.domain.datasource.database.datasource
 
 import com.invia.domain.datasource.database.dao.NotesDAO
 import com.invia.domain.datasource.database.entities.Note
+import com.invia.domain.datasource.database.entities.relations.NoteWithLabels
 import kotlinx.coroutines.flow.Flow
 
 interface NotesDataSource {
@@ -11,11 +12,11 @@ interface NotesDataSource {
 
     suspend fun insert(notes: List<Note>):List<Long>
 
-     fun getAllNotes(): Flow<List<Note>>
+     fun getAllNotes(): Flow<List<NoteWithLabels>>
 
-     fun getNoteById(id: Long): Flow<List<Note>>
+     fun getNoteById(id: Long): Flow<List<NoteWithLabels>>
 
-     fun getNotesBySearch(term: String): Flow<List<Note>>
+     fun getNotesBySearch(term: String): Flow<List<NoteWithLabels>>
 
-     fun getNotesBySearchTerm(term: String): Flow<List<Note>>
+     fun getNotesBySearchTerm(term: String): Flow<List<NoteWithLabels>>
 }

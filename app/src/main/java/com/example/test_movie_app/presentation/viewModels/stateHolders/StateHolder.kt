@@ -2,8 +2,8 @@ package com.example.test_movie_app.presentation.viewModels.stateHolders
 
 import com.invia.domain.datasource.database.entities.Movie
 
-data class MovieStateHolder(
+data class StateHolder<T>(
     val isLoading:Boolean = false,
-    val data: List<Movie>? = null,
+    val data: List<T>? = null,
     val error: String = ""
 )

@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.example.test_movie_app.presentation.viewModels.navigation.MovieNavigation
+import com.example.test_movie_app.presentation.viewModels.navigation.NotesNavigation
 import com.example.test_movie_app.ui.theme.TestMovieAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
@@ -73,5 +74,5 @@ fun GreetingPreview() {
 @Composable
 fun App() {
     val navHostController = rememberNavController()
-    MovieNavigation(navHostController = navHostController)
+    NotesNavigation(navHostController = navHostController)
 }

@@ -1,18 +1,10 @@
 package com.example.test_movie_app.presentation.viewModels
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.test_movie_app.presentation.viewModels.stateHolders.MovieStateHolder
+import com.example.test_movie_app.presentation.viewModels.stateHolders.StateHolder
 import com.invia.domain.common.Result
-import com.invia.domain.datasource.database.dao.LabelDAO
-import com.invia.domain.datasource.database.dao.LabelledNotesDAO
-import com.invia.domain.datasource.database.dao.NotesDAO
-import com.invia.domain.datasource.database.entities.Label
-import com.invia.domain.datasource.database.entities.LabelledNotes
 import com.invia.domain.datasource.database.entities.Movie
-import com.invia.domain.datasource.database.entities.Note
 import com.invia.domain.useCases.GetMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -56,14 +48,14 @@ class MoviesViewModel @Inject constructor(val useCase: GetMoviesUseCase) : ViewM
         get() = _isRefreshing.asStateFlow()
 
 
-    private var _response = MutableStateFlow(MovieStateHolder().apply { })
-    val response: StateFlow<MovieStateHolder>
+    private var _response = MutableStateFlow(StateHolder<Movie>().apply { })
+    val response: StateFlow<StateHolder<Movie>>
         get() = _response.asStateFlow()
 
     init {
         viewModelScope.launch {
             useCase.data.collectLatest {
-                _response.value = MovieStateHolder(data = it)
+                _response.value = StateHolder(data = it)
             }
         }
     }
@@ -75,7 +67,7 @@ class MoviesViewModel @Inject constructor(val useCase: GetMoviesUseCase) : ViewM
                 println("==>collect: $it")
                 when (it) {
                     is Result.Loading -> {
-                        _response.value = MovieStateHolder(isLoading = true)
+                        _response.value = StateHolder(isLoading = true)
                     }
 
                     is Result.Success<*> -> {
@@ -83,7 +75,7 @@ class MoviesViewModel @Inject constructor(val useCase: GetMoviesUseCase) : ViewM
                     }
 
                     is Result.Error -> {
-                        _response.value = MovieStateHolder(error = it.message.toString())
+                        _response.value = StateHolder(error = it.message.toString())
                     }
                 }
             }

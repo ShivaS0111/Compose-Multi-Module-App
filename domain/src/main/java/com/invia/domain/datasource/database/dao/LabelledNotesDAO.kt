@@ -35,7 +35,7 @@ interface LabelledNotesDAO {
 
     @Transaction
     @Query("SELECT * FROM notes")
-    fun getNotes(): List<NoteWithLabels>
+    fun getNotes(): Flow<List<NoteWithLabels>>
 
     @Transaction
     @Query("SELECT * FROM labels")
@@ -43,11 +43,14 @@ interface LabelledNotesDAO {
 
     @Transaction
     @Query("select * from notes n, labels l, labelled_notes ln where  n.noteId = ln.noteId and l.labelId = ln.labelId")
-    fun getNotesQry(): List<NoteWithLabels>
+    fun getAllNotes(): List<NoteWithLabels>
+    @Transaction
+    @Query("select * from notes n, labels l, labelled_notes ln where  n.noteId = ln.noteId and l.labelId = ln.labelId")
+    fun getNotesQry(): Flow<List<NoteWithLabels>>
 
     @Transaction
     @Query("select * from notes n, labels l, labelled_notes ln where  n.noteId = ln.noteId and l.labelId = ln.labelId")
-    fun getLabelsQry(): List<LabelWithNotes>
+    fun getLabelsQry(): Flow<List<LabelWithNotes>>
 
 
     @Transaction
@@ -56,7 +59,7 @@ interface LabelledNotesDAO {
                     "and l.labelId = ln.labelId " +
                     "and  ln.noteId = (:noteId)"
     )
-    fun getNotesByIdQry(noteId:Long): List<NoteWithLabels>
+    fun getNotesByIdQry(noteId:Long): Flow<List<NoteWithLabels>>
 
     @Transaction
     @Query("select * from notes n, labels l, labelled_notes ln " +
@@ -64,7 +67,7 @@ interface LabelledNotesDAO {
                     "and l.labelId = ln.labelId " +
                     "and  ln.labelId = (:labelId)"
     )
-    fun getLabelsByIdQry(labelId:Long): List<NoteWithLabels>
+    fun getLabelsByIdQry(labelId:Long): Flow<List<NoteWithLabels>>
 }
 
 

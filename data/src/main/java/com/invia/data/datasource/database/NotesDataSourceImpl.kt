@@ -12,10 +12,10 @@ class NotesDataSourceImpl @Inject constructor(override var dao: NotesDAO) : Note
 
     override  fun getAllNotes() = dao.getAllNotes()
 
-    override  fun getNoteById(id: Long) = dao.getNoteById(id)
+    override  fun getNoteById(id: Long) = dao.getNotesByIdQry(id)
 
-    override  fun getNotesBySearch(term: String) = dao.getNotesBySearch(term)
+    override  fun getNotesBySearch(term: String) = dao.getNotesBySearchQry(term)
 
-    override  fun getNotesBySearchTerm(term: String) = dao.getNotesBySearchTerm(term)
+    override  fun getNotesBySearchTerm(term: String) = dao.getNotesBySearchTermQry(term)
 
 }

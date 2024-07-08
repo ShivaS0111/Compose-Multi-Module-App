@@ -1,7 +1,7 @@
 package com.example.test_movie_app
 
 import com.example.test_movie_app.presentation.viewModels.MoviesViewModel
-import com.example.test_movie_app.presentation.viewModels.stateHolders.MovieStateHolder
+import com.example.test_movie_app.presentation.viewModels.stateHolders.StateHolder
 import com.invia.domain.common.Result
 import com.invia.domain.datasource.database.entities.Movie
 import io.mockk.coEvery
@@ -58,11 +58,11 @@ class MvUnitTest {
 
         // Verify that the response LiveData is in the loading state
         Assert.assertTrue(viewModel.response.value.isLoading)
-        Assert.assertEquals(viewModel.response.value, MovieStateHolder(isLoading = true))
+        Assert.assertEquals(viewModel.response.value, StateHolder(isLoading = true))
 
         println(viewModel.response.value.data)
         // Verify that the LiveData contains the correct data after the repository call
-        Assert.assertEquals(MovieStateHolder(data = data), viewModel.response.value.data)
+        Assert.assertEquals(StateHolder(data = data), viewModel.response.value.data)
         verify(exactly = 0) {
             viewModel.response.value
         }
@@ -84,7 +84,7 @@ class MvUnitTest {
         Assert.assertTrue(viewModel.response.value.isLoading)
 
         // Verify that the LiveData contains the correct error message after the repository call
-        Assert.assertEquals(MovieStateHolder(error = errorMessage), viewModel.response.value)
+        Assert.assertEquals(StateHolder(error = errorMessage), viewModel.response.value)
     }
 
 }
