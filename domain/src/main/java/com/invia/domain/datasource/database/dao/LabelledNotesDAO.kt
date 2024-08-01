@@ -14,12 +14,19 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LabelledNotesDAO {
     @Transaction
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(note: LabelledNotes):Long
 
     @Transaction
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(note: List<LabelledNotes>):List<Long>
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun update(note: LabelledNotes):Long
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun update(note: List<LabelledNotes>):List<Long>
 
     @Transaction
     @Delete
@@ -39,11 +46,11 @@ interface LabelledNotesDAO {
 
     @Transaction
     @Query("SELECT * FROM labels")
-    fun getLabels(): List<LabelWithNotes>
+    fun getLabels(): Flow<List<LabelWithNotes>>
 
     @Transaction
     @Query("select * from notes n, labels l, labelled_notes ln where  n.noteId = ln.noteId and l.labelId = ln.labelId")
-    fun getAllNotes(): List<NoteWithLabels>
+    fun getAllNotes(): Flow<List<NoteWithLabels>>
     @Transaction
     @Query("select * from notes n, labels l, labelled_notes ln where  n.noteId = ln.noteId and l.labelId = ln.labelId")
     fun getNotesQry(): Flow<List<NoteWithLabels>>

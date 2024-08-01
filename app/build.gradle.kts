@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.test_movie_app"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -94,12 +94,13 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
     implementation("androidx.activity:activity-ktx:1.9.0")
 
+
     //dagger-hilt
 
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
     implementation("androidx.test.ext:junit-ktx:1.2.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose-android:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose-android:2.8.4")
     kapt ("com.google.dagger:hilt-compiler:2.51.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
@@ -113,8 +114,20 @@ dependencies {
 
     implementation( project(":domain"))
     implementation( project(":data"))
-    implementation ("com.canopas.editor:rich-editor-compose:0.1.0")
 
+    //implementation ("com.canopas.editor:rich-editor-compose:0.1.0")
+    //implementation("com.halilibo.compose-richtext:richtext-ui:1.0.0-alpha01")
+    //implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc05")
+
+    implementation ("com.darkrockstudios:richtexteditor-android:1.5.0")
+
+    val colorPicker = "0.7.0"
+    implementation ("com.godaddy.android.colorpicker:compose-color-picker:$colorPicker")
+
+// with Android ColorInt extensions
+    implementation ("com.godaddy.android.colorpicker:compose-color-picker-android:$colorPicker")
+// desktop jvm version
+    //implementation ("com.godaddy.android.colorpicker:compose-color-picker-jvm:$colorPicker")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

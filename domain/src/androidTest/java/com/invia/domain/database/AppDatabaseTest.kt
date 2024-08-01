@@ -1,6 +1,7 @@
 package com.invia.domain.datasource.database
 
 import android.content.Context
+import android.graphics.Color
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -51,7 +52,7 @@ class AppDatabaseTest {
 
     @Test
     fun testInsertAndGetLabel() = runBlocking {
-        val label = Label(label = "Test Label", color = "Blue", textColor = "White")
+        val label = Label(label = "Test Label", color = Color.BLUE, textColor = Color.WHITE)
         labelDao.insert(label)
 
         val labels = labelDao.getAllLabels().first()
@@ -71,8 +72,9 @@ class AppDatabaseTest {
 
     @Test
     fun testSearchLabelByTerm() = runBlocking {
-        val label1 = Label(label = "Work", color = "Red", textColor = "White")
-        val label2 = Label(label = "Personal", color = "Blue", textColor = "White")
+        val label1 = Label(label = "Test Label", color = Color.BLUE, textColor = Color.WHITE)
+        val label2 = Label(label = "Test Label", color = Color.BLUE, textColor = Color.WHITE)
+
         labelDao.insert(listOf(label1, label2))
 
         val searchTerm = "Work"
@@ -102,7 +104,8 @@ class AppDatabaseTest {
     @Test
     fun testInsertLabelledNotes() = runBlocking {
         val note = Note(title = "Work", note = "Sample Note", dateTime = Date())
-        val label = Label(label = "Sample Label", color = "Green", textColor = "Black")
+        val label = Label(label = "Test Label", color = Color.BLUE, textColor = Color.WHITE)
+
         notesDao.insert(note)
         labelDao.insert(label)
 

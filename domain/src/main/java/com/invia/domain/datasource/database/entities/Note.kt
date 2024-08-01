@@ -9,7 +9,7 @@ import java.util.Date
 @Entity(tableName = "notes")
 data class Note(
     @PrimaryKey(autoGenerate = true)
-    val noteId: Long? = null,
+    var noteId: Long? = null,
 
     @SerializedName("title")
     var title: String,

@@ -13,8 +13,7 @@ class MoviesRepositoryImpl @Inject constructor(
     private var networkDatasource: MoviesDataSourceNetwork,
     private var localDataSource: MoviesDataSourceLocal
 ) : TvShowsRepository {
-    override val data: Flow<List<Movie>>
-        get() = localDataSource.getAllMovies()
+    override val data = localDataSource.getAllMovies()
 
     override suspend fun getTvShows(): Flow<Result<List<Movie>>> = flow {
         emit(Result.Loading())

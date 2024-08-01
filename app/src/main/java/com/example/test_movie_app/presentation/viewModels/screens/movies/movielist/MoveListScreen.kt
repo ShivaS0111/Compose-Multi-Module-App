@@ -1,11 +1,11 @@
-package com.example.test_movie_app.presentation.viewModels.screens
+package com.example.test_movie_app.presentation.viewModels.screens.movies.movielist
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -13,6 +13,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -31,46 +33,48 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.example.test_movie_app.presentation.viewModels.NotesViewModel
-import com.example.test_movie_app.presentation.viewModels.components.NoteWidget
+import com.example.test_movie_app.ResultCallBack
+import com.example.test_movie_app.presentation.viewModels.components.ShowItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotesScreen(
+fun MovieListScreen(
     navHostController: NavHostController,
-    viewModel: NotesViewModel = hiltViewModel()
+    viewModel: MoviesViewModel = hiltViewModel(),
+    resultCallback: ResultCallBack?=null
 ) {
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            viewModel.getData()
+            viewModel.getAllTvShows()
         }
     }
     Scaffold(topBar = {
         TopAppBar(
-            title = { Text(text = "MyNotes") },
+            title = { Text(text = "Movie List") },
             colors = TopAppBarDefaults.topAppBarColors().copy(
                 containerColor = Color.Green
             )
         )
     }) { innerPadding ->
-        NoteData(
+        _body(
             Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-            ,
-            viewModel
+                .padding(innerPadding), viewModel, navHostController
         )
     }
+
 }
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun NoteData(modifier: Modifier, viewModel: NotesViewModel) {
+fun _body(modifier: Modifier, viewModel: MoviesViewModel, navController: NavHostController) {
 
+    val coroutineScope = rememberCoroutineScope()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.getData() })
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.getAllTvShows() })
     val result = viewModel.response.collectAsStateWithLifecycle()
 
     Column(
@@ -79,8 +83,12 @@ fun NoteData(modifier: Modifier, viewModel: NotesViewModel) {
         verticalArrangement = Arrangement.Top
     ) {
         Row {
-            _button(0, "Add Note", onClick = {viewModel.onCoroutine()})
-            _button(1, "Add Label", onClick = {viewModel.onCoroutine()})
+            _button(0, "co", onClick = {
+                navController.navigate("notes_list")
+            })
+            _button(1, "join", onClick = { viewModel.onCoroutine() })
+            _button(2, "cancel", onClick = { viewModel.onCoroutine() })
+            _button(3, "cancelJoin", onClick = { viewModel.onCoroutine() })
             //_button(4, "co", viewModel)
         }
         Box(
@@ -118,9 +126,9 @@ fun NoteData(modifier: Modifier, viewModel: NotesViewModel) {
 
 
                     ) {
-                    result.value.data?.let {
+                    result.value.data?.let { it ->
                         items(it.size) { index ->
-                            NoteWidget(note = it[index])
+                            ShowItem(showsResponseItem = it[index])
                         }
                     }
                 }
@@ -133,5 +141,27 @@ fun NoteData(modifier: Modifier, viewModel: NotesViewModel) {
                     .align(Alignment.TopCenter)
             )
         }
+    }
+}
+
+fun _button1(case: String, text: String, onClick: () -> Unit) {
+
+}
+
+@Composable
+fun _button(case: Int, text: String, onClick: (() -> Unit)? = null) {
+    Button(
+        modifier = Modifier
+            .height(60.dp)
+            .padding(10.dp),
+        colors = ButtonDefaults.buttonColors().copy(
+            containerColor = Color.LightGray,
+            contentColor = Color.Red
+        ),
+        onClick = {
+            onClick?.invoke()
+        }
+    ) {
+        Text(text = text)
     }
 }

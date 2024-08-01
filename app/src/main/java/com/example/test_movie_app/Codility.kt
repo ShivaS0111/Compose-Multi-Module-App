@@ -2,6 +2,7 @@ package com.example.test_movie_app
 
 import android.os.Build.VERSION_CODES
 import org.bouncycastle.util.Integers
+import java.util.Date
 
 
 object Codility {
@@ -107,6 +108,8 @@ fun main() {
     var n =1081
     //println( Codility.findMaxBinaryGap(n))
     //println( Codility.findMaxGap(n))
-    println( Codility.findMaxGap1(n))
+    //println( Codility.findMaxGap1(n))
+
+    println(Date())
 
 }

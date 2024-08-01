@@ -7,11 +7,11 @@ import androidx.room.Index
 @Entity(
     tableName = "labelled_notes",
     primaryKeys = ["noteId", "labelId"],
-    foreignKeys = [
+    /*foreignKeys = [
         ForeignKey(entity = Note::class, parentColumns = ["noteId"], childColumns = ["noteId"], onDelete = ForeignKey.CASCADE),
         ForeignKey(entity = Label::class, parentColumns = ["labelId"], childColumns = ["labelId"], onDelete = ForeignKey.CASCADE)
     ],
-    indices = [Index(value = ["noteId"]), Index(value = ["labelId"])]
+    indices = [Index(value = ["noteId"]), Index(value = ["labelId"])]*/
 )
 data class LabelledNotes(
     val noteId: Long,

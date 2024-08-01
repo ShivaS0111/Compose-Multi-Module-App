@@ -8,7 +8,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.example.test_movie_app.MainActivity
-import com.example.test_movie_app.presentation.viewModels.MoviesViewModel
+import com.example.test_movie_app.presentation.viewModels.screens.movies.movielist.MoviesViewModel
 import com.invia.data.repository.MockTvShowsRepository
 import com.invia.data.useCases.GetMoviesUseCaseImpl
 import com.invia.domain.datasource.database.entities.Movie

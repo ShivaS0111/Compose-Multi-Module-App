@@ -5,10 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun TitleWidget(title:String) {
-    Text(text = title, style = TextStyle( fontWeight = FontWeight.SemiBold))
+    Text(text = title, style = TextStyle( fontWeight = FontWeight.SemiBold, fontSize = 24.sp))
 }
 
 @Preview(showBackground = true, showSystemUi = true)

@@ -1,20 +1,18 @@
-package com.example.test_movie_app.presentation.viewModels.screens
+package com.example.test_movie_app.presentation.viewModels.screens.notes.list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -33,47 +31,42 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.example.test_movie_app.presentation.viewModels.MoviesViewModel
-import com.example.test_movie_app.presentation.viewModels.components.ShowItem
-import kotlinx.coroutines.launch
+import com.example.test_movie_app.presentation.viewModels.components.NoteWidget
+import com.example.test_movie_app.presentation.viewModels.navigation.ResultViewModel
+import com.example.test_movie_app.presentation.viewModels.navigation.Route
+import com.example.test_movie_app.presentation.viewModels.screens.movies.movielist._button
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun MovieListScreen(
+fun NotesScreen(
     navHostController: NavHostController,
-    viewModel: MoviesViewModel = hiltViewModel()
+    resultViewModel: ResultViewModel,
+    viewModel: NotesViewModel = hiltViewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            viewModel.getAllTvShows()
-        }
-    }
-    Scaffold(topBar = {
-        TopAppBar(
-            title = { Text(text = "Movie List") },
-            colors = TopAppBarDefaults.topAppBarColors().copy(
-                containerColor = Color.Green
-            )
-        )
-    }) { innerPadding ->
-        _body(
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding), viewModel
-        )
-    }
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
+    // Call getData() only once when the composable is first composed
+    LaunchedEffect(Unit) { viewModel.getData() }
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.getData() })
+
+    NoteData(Modifier.fillMaxSize(), viewModel, isRefreshing, pullRefreshState,
+        navHostController,
+        onClick = {
+        navHostController.navigate(Route.AddNote)
+    })
 }
-
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun _body(modifier: Modifier, viewModel: MoviesViewModel) {
-
-    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { viewModel.getAllTvShows() })
-    val result = viewModel.response.collectAsStateWithLifecycle()
+fun NoteData(
+    modifier: Modifier,
+    viewModel: NotesViewModel,
+    isRefreshing: Boolean,
+    pullRefreshState: PullRefreshState,
+    navHostController: NavHostController,
+    onClick: () -> Unit
+) {
 
     Column(
         modifier,
@@ -81,13 +74,10 @@ fun _body(modifier: Modifier, viewModel: MoviesViewModel) {
         verticalArrangement = Arrangement.Top
     ) {
         Row {
-            _button1(case = "", text = "", onClick = {})
-            _button(0, "co", onClick = {
-                viewModel.getAllTvShows()
-            })
-            _button(1, "join", onClick = { viewModel.onCoroutine() })
-            _button(2, "cancel", onClick = { viewModel.onCoroutine() })
-            _button(3, "cancelJoin", onClick = { viewModel.onCoroutine() })
+            _button(0, "Add Note", onClick =  { navHostController.navigate(Route.AddNote) })
+            _button(1, "Add Label", onClick = { navHostController.navigate(Route.AddLabel) })
+            _button(0, "Delete All Notes", onClick = { viewModel.deleteAll() })
+            _button(1, "Add Label", onClick = { viewModel.onCoroutine() })
             //_button(4, "co", viewModel)
         }
         Box(
@@ -95,39 +85,42 @@ fun _body(modifier: Modifier, viewModel: MoviesViewModel) {
                 .pullRefresh(pullRefreshState)
                 .fillMaxSize()
         ) {
+
+            val result = viewModel.response.collectAsStateWithLifecycle()
             if (result.value.isLoading) {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment
-                    = Alignment.Center
+                    modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
-                        modifier = Modifier
-                            .testTag("Loading...")
+                        modifier = Modifier.testTag("Loading...")
                     )
                 }
             } else {
                 if (result.value.error.isNotBlank()) {
                     Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
                     ) {
                         Text(text = result.value.error)
                     }
                 }
+
                 LazyVerticalStaggeredGrid(
                     columns = StaggeredGridCells.Fixed(2),
                     modifier = Modifier
                         .padding(8.dp)
+                        .matchParentSize()
                         .testTag("list"),
                     verticalItemSpacing = 10.dp, // Vertical spacing
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
 
-
-                    ) {
-                    result.value.data?.let { it ->
+                    result.value.data?.let {
                         items(it.size) { index ->
-                            ShowItem(showsResponseItem = it[index])
+                            NoteWidget(note = it[index], onNoteClick = { noteId->
+                                val route = "${Route.EditNote}/$noteId"
+                                println("edit-noteId: $noteId, route:$route")
+                                navHostController.navigate( route)
+                            })
                         }
                     }
                 }
@@ -136,31 +129,8 @@ fun _body(modifier: Modifier, viewModel: MoviesViewModel) {
             PullRefreshIndicator(
                 refreshing = isRefreshing,
                 state = pullRefreshState,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
+                modifier = Modifier.align(Alignment.TopCenter)
             )
         }
-    }
-}
-
-fun _button1(case: String, text: String, onClick: () -> Unit) {
-
-}
-
-@Composable
-fun _button(case: Int, text: String, onClick: (() -> Unit)? = null) {
-    Button(
-        modifier = Modifier
-            .height(60.dp)
-            .padding(10.dp),
-        colors = ButtonDefaults.buttonColors().copy(
-            containerColor = Color.LightGray,
-            contentColor = Color.Red
-        ),
-        onClick = {
-            onClick?.invoke()
-        }
-    ) {
-        Text(text = text)
     }
 }

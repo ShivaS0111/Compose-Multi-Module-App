@@ -3,6 +3,7 @@ package com.example.test_movie_app
 import com.invia.data.datasource.network.datasource.MoviesDataSourceNetworkImpl
 import com.invia.domain.datasource.MoviesDataSource
 import com.invia.domain.datasource.database.entities.Movie
+import com.invia.domain.datasource.network.datasource.MoviesDataSourceNetwork
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
@@ -52,16 +53,16 @@ class MainActivityTest {
     }
 
     @Test
-    fun testTakingALongTime() = runTest(timeout = 30.seconds) {
+    fun testTakingALongTime() = runTest(timeout = 5.seconds) {
         val result = withContext(Dispatchers.Default) {
-            delay(5.seconds) // this delay is not in the test dispatcher and will not be skipped
+            delay(2.seconds) // this delay is not in the test dispatcher and will not be skipped
             3
         }
         assertEquals(3, result)
     }
 
 
-    private lateinit var dataSource: MoviesDataSource
+    private lateinit var dataSource: MoviesDataSourceNetwork
 
     private  val data: List<Movie> by lazy {
         arrayListOf(

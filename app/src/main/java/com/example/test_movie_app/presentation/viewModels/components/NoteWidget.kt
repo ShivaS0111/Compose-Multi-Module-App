@@ -1,5 +1,6 @@
 package com.example.test_movie_app.presentation.viewModels.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -16,11 +17,8 @@ import com.invia.domain.datasource.database.entities.Note
 import com.invia.domain.datasource.database.entities.relations.NoteWithLabels
 
 @Composable
-fun NoteWidget(note: NoteWithLabels) {
+fun NoteWidget(note: NoteWithLabels, onNoteClick: ((id: Long) -> Unit)? = null) {
     Card(
-        shape = CardDefaults.shape.apply {
-
-        },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White, //Card background color
@@ -28,29 +26,35 @@ fun NoteWidget(note: NoteWithLabels) {
         ),
         modifier = Modifier
             .wrapContentSize()
+            .clickable {
+                println("==>Note: ${note.note}")
+                note.note.noteId?.let { onNoteClick?.invoke(it) }
+            }
     ) {
-        Column( Modifier.padding(8.dp)) {
+        Column(Modifier.padding(8.dp)) {
             TitleWidget(title = note.note.title)
             SmallDescriptionWidget(desc = note.note.note)
             Box(modifier = Modifier.padding(3.dp))
-            LabelsNoteWidget(labels = note.labels)
+            LabelsWidget(labels = note.labels, isChips = true)
         }
     }
 }
 
-@Preview( showSystemUi = false)
+@Preview(showSystemUi = false)
 @Composable
-fun NoteWidgetPreview(){
-    val note = Note(title = "Note title", note = "Both BasicText and Text have overflow and maxLines " +
-            "arguments which can help you.BasicText and Text have overflow and maxLines arguments " +
-            "which can help you.BasicText and Text have overflow and maxLines " +
-            "arguments which can help you.")
+fun NoteWidgetPreview() {
+    val note = Note(
+        title = "Note title", note = "Both BasicText and Text have overflow and maxLines " +
+                "arguments which can help you.BasicText and Text have overflow and maxLines arguments " +
+                "which can help you.BasicText and Text have overflow and maxLines " +
+                "arguments which can help you."
+    )
     val labels = arrayListOf<Label>().apply {
         for (i in 1..10) {
             add(Label(label = "label ${(1..10).random()}"))
         }
     }
 
-    NoteWidget(note = NoteWithLabels(note, labels) )
+    NoteWidget(note = NoteWithLabels(note, labels))
 
 }

@@ -19,6 +19,13 @@ interface LabelDAO {
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(labels: List<Label>):List<Long>
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun update(label: Label):Long
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun update(labels: List<Label>):List<Long>
 
     @Transaction
     @Delete
@@ -37,12 +44,21 @@ interface LabelDAO {
     fun getLabelById(id: Long): Flow<List<Label>>
 
     @Transaction
-    @Query("SELECT * FROM labels where label LIKE (:term)")
-    fun getLabelBySearch(term: String): Flow<List<Label>>
+    @Query("SELECT * FROM labels WHERE label LIKE '%' || :searchTerm || '%'")
+    fun getLabelBySearch(searchTerm: String): Flow<List<Label>>
 
     @Transaction
     @Query("SELECT * FROM labels WHERE label LIKE '%' || :term || '%'")
     fun getLabelBySearchTerm(term: String): Flow<List<Label>>
+
+    @Transaction
+    @Query( "SELECT * FROM labels WHERE label LIKE '%' || :searchTerm || '%'" )
+    fun getLabelBySearchList(searchTerm: String): List<Label>
+
+
+    @Transaction
+    @Query( "SELECT * FROM labels WHERE labelId in  ( :ids ) " )
+    fun getLabelByIds(ids: List<Long>): List<Label>
 
 }
 

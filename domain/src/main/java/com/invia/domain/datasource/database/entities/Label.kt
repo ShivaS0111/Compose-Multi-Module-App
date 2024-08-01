@@ -13,9 +13,9 @@ data class Label(
     var label: String,
 
     @SerializedName("color")
-    var color: String? = null,
+    var color: Int? = null,
 
     @SerializedName("textColor")
-    var textColor: String? = null,
+    var textColor: Int? = null,
 
     )

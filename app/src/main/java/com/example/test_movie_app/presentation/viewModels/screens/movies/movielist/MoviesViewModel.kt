@@ -1,4 +1,4 @@
-package com.example.test_movie_app.presentation.viewModels
+package com.example.test_movie_app.presentation.viewModels.screens.movies.movielist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,27 +34,19 @@ import kotlin.random.Random
 @HiltViewModel
 class MoviesViewModel @Inject constructor(val useCase: GetMoviesUseCase) : ViewModel() {
 
-    /*@Inject
-    lateinit var labelDAO: LabelDAO
-
-    @Inject
-    lateinit var notesDAO: NotesDAO
-
-    @Inject
-    lateinit var labelledNotesDAO: LabelledNotesDAO*/
-
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean>
         get() = _isRefreshing.asStateFlow()
 
 
-    private var _response = MutableStateFlow(StateHolder<Movie>().apply { })
+    private var _response = MutableStateFlow(StateHolder<Movie>())
     val response: StateFlow<StateHolder<Movie>>
         get() = _response.asStateFlow()
 
     init {
         viewModelScope.launch {
             useCase.data.collectLatest {
+                println("==>data collect: ${it.size}, $it")
                 _response.value = StateHolder(data = it)
             }
         }
